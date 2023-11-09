@@ -1,0 +1,60 @@
+---
+title: "Mutual_Rank_Heatmap"
+author: "RSA"
+date: '2023-11-09'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r itial}
+library(tidyverse)
+
+### I need to 1) create a heat map from the mutural rank data and 2) a line graph from the tpm data by tissue type
+
+# 1) Heat map
+
+exp.data <- read_csv("data/Comparisson_Matrix_file.csv")
+
+
+str(exp.data)
+head(exp.data)
+
+exp.heatmap <- ggplot(data = exp.data, mapping = aes(x = Node1_T,
+                                                     y = Node2,
+                                                     fill = Mutual_Rank)) +
+  geom_tile()
+
+exp.heatmap 
+
+exp.data$log.expression <- log(exp.data$Mutual_Rank)
+
+exp.heatmap.log <- ggplot(data = exp.data, mapping = aes(x = Node1_T,
+                                                         y = Node2,
+                                                         fill = log.expression)) +
+  geom_tile() +
+  xlab(label = "Gene1") + # Add a nicer x-axis title
+  theme(axis.title.y = element_blank(), # Remove the y-axis title
+        axis.text.x = element_text(angle = 45, vjust = 0.5)) # Rotate the x-axis labels
+
+exp.heatmap.log
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
